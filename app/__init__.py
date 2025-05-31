@@ -7,6 +7,7 @@ from flask_limiter.util import get_remote_address
 import logging
 from logging.handlers import RotatingFileHandler
 import os
+import sys
 from config import Config
 from flask_babel import Babel
 
@@ -36,12 +37,24 @@ def create_app(config_class=Config):
     # Setup logging
     if not os.path.exists('logs'):
         os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
+    
+    # Configure logging to use UTF-8
+    logging.basicConfig(encoding='utf-8')
+    file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10, encoding='utf-8')
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
     ))
     file_handler.setLevel(logging.INFO)
+    
+    # Add console handler for development
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    console_handler.setLevel(logging.INFO)
+    
     app.logger.addHandler(file_handler)
+    app.logger.addHandler(console_handler)
     app.logger.setLevel(logging.INFO)
     app.logger.info('Khởi động ứng dụng')
 

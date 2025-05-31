@@ -1,4 +1,5 @@
-﻿workers = 4
+﻿wsgi_app = 'wsgi:app'
+workers = 4
 bind = '0.0.0.0:10000'
 timeout = 120
 keepalive = 5
