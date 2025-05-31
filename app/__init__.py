@@ -52,6 +52,9 @@ def create_app(config_class=Config):
     from .routes.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
+    from .errors import errors as errors_blueprint
+    app.register_blueprint(errors_blueprint)
+
     # User loader
     from .models import User
     @login_manager.user_loader
